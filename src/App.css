@@ -35,6 +35,7 @@ body {
   padding-bottom: 8px;
   gap: 0;
   transition: opacity 0.4s ease;
+  background: transparent;
 }
 
 .overlay--visible {
@@ -51,6 +52,8 @@ body {
   width: 160px;
   height: auto;
   display: block;
+  object-fit: contain;
+  background: transparent;
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
   flex-shrink: 0;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import SpeechBubble from "./SpeechBubble";
-import catSet1 from "../assets/cat-set-1/cat.svg";
-import catSet2 from "../assets/cat-set-2/cat.svg";
+import catSet1 from "../assets/cat-set-1/cat1-1.png";
+import catSet2 from "../assets/cat-set-2/cat2-1.png";
 
 interface PetOverlayProps {
   message: string;
