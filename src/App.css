@@ -1,0 +1,101 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: transparent !important;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  width: 320px;
+  height: 300px;
+}
+
+#root {
+  width: 320px;
+  height: 300px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: transparent;
+}
+
+/* ── Overlay container ── */
+.overlay-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 320px;
+  padding-bottom: 8px;
+  gap: 0;
+  transition: opacity 0.4s ease;
+}
+
+.overlay--visible {
+  opacity: 1;
+}
+
+.overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Cat image ── */
+.cat-image {
+  width: 160px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+  flex-shrink: 0;
+}
+
+/* ── Speech bubble ── */
+.speech-bubble {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 10px 16px;
+  max-width: 270px;
+  margin-bottom: 6px;
+  position: relative;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.18),
+    0 0 0 2px #ffc8d8;
+}
+
+/* Tail border (pink) */
+.speech-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 11px solid transparent;
+  border-top-color: #ffc8d8;
+}
+
+/* Tail white fill */
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 9px solid transparent;
+  border-top-color: #ffffff;
+}
+
+.speech-bubble__text {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded",
+    "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3a3a3a;
+  text-align: center;
+  line-height: 1.45;
+}
