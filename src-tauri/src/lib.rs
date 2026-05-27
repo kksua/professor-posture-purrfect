@@ -27,21 +27,42 @@ impl Default for AppState {
 
 type SharedState = Arc<Mutex<AppState>>;
 
+/// Raise the window above the macOS Dock (NSStatusWindowLevel = 25 > Dock level 20).
+/// Called every time before show() so the level survives across hide/show cycles.
+/// ns_window() is a direct method on WebviewWindow, gated by #[cfg(target_os = "macos")]
+/// in the Tauri source — no extra trait import needed.
+#[cfg(target_os = "macos")]
+fn elevate_window_above_dock(window: &tauri::WebviewWindow) {
+    use objc::{msg_send, sel, sel_impl};
+    let Ok(ns_win_ptr) = window.ns_window() else { return; };
+    let ns_window = ns_win_ptr as *mut objc::runtime::Object;
+    unsafe {
+        // NSStatusWindowLevel (25) sits above the Dock (20) and menu bar (24).
+        // Using 25 keeps us visible above the Dock without covering system alerts.
+        let _: () = msg_send![ns_window, setLevel: 25i64];
+    }
+}
+
 fn show_pet_window(app: &AppHandle) {
     let Some(window) = app.get_webview_window("pet-overlay") else {
         return;
     };
 
-    // Position at bottom-center of the primary monitor
+    // Position at bottom-right of the primary monitor, clear of the Dock
     if let Ok(Some(monitor)) = window.primary_monitor() {
         let screen = monitor.size();
         let scale = monitor.scale_factor();
         let win_w = (320.0 * scale) as i32;
         let win_h = (300.0 * scale) as i32;
-        let x = (screen.width as i32 - win_w) / 2;
+        // 20 logical px from the right edge; 30 logical px from the bottom edge
+        let x = screen.width as i32 - win_w - (20.0 * scale) as i32;
         let y = screen.height as i32 - win_h - (30.0 * scale) as i32;
         let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition { x, y }));
     }
+
+    // Elevate above Dock before showing
+    #[cfg(target_os = "macos")]
+    elevate_window_above_dock(&window);
 
     let _ = window.show();
     let _ = window.emit("show-pet", ());
